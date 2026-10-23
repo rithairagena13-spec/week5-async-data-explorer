@@ -228,6 +228,124 @@ function updateResults() {
     renderBooks(getVisibleBooks());
 }
 
+
+async function showBookDetails(bookKey) {
+    const book = state.books.find(({ key }) => key === bookKey);
+
+    if (!book) return;
+
+    previouslyFocusedElement = document.activeElement;
+
+    bookModal.classList.remove("hidden");
+    bookModal.classList.add("flex");
+
+    modalContent.innerHTML = `
+        <p class="text-[#66756a]" role="status">
+            Loading book details...
+        </p>
+    `;
+
+    closeModalButton.focus();
+
+    try {
+        const details = await getJSON(
+            `https://openlibrary.org${encodeURI(bookKey)}.json`
+        );
+
+        const description =
+            typeof details.description === "string"
+                ? details.description
+                : details.description?.value;
+
+        const title = details.title || book.title || "Untitled";
+        const authors = book.author_name?.join(", ") || "Unknown author";
+        const subjects = (details.subjects || []).slice(0, 8);
+
+        modalContent.innerHTML = `
+            <h3 class="mb-3 text-xl font-semibold text-[#304d3b]">
+                ${escapeHTML(title)}
+            </h3>
+
+            <p class="mb-2 text-sm text-[#66756a]">
+                <strong>Author:</strong> ${escapeHTML(authors)}
+            </p>
+
+            <p class="mb-5 text-sm text-[#66756a]">
+                <strong>First published:</strong>
+                ${book.first_publish_year || "Year unavailable"}
+            </p>
+
+            <div class="mb-5">
+                <h4 class="mb-2 font-semibold">About this book</h4>
+                <p class="text-sm leading-7 text-[#66756a]">
+                    ${escapeHTML(description || "No description is available for this book.")}
+                </p>
+            </div>
+
+            <div>
+                <h4 class="mb-2 font-semibold">Subjects</h4>
+                ${
+                    subjects.length
+                        ? `<div class="flex flex-wrap gap-2">
+                            ${subjects.map(subject => `
+                                <span class="rounded-full bg-[#e4eadd] px-3 py-1 text-xs text-[#304d3b]">
+                                    ${escapeHTML(subject)}
+                                </span>
+                            `).join("")}
+                           </div>`
+                        : `<p class="text-sm text-[#66756a]">No subjects available.</p>`
+                }
+            </div>
+        `;
+    } catch (error) {
+        modalContent.innerHTML = `
+            <p class="mb-4 text-red-700" role="alert">
+                We couldn't load the details for this book.
+            </p>
+
+            <button
+                id="retry-details"
+                type="button"
+                class="rounded-lg bg-[#304d3b] px-4 py-2 text-white hover:bg-[#45684f] focus:outline-2 focus:outline-offset-2 focus:outline-[#304d3b]"
+            >
+                Try again
+            </button>
+        `;
+
+        document.querySelector("#retry-details")
+            .addEventListener("click", () => showBookDetails(bookKey));
+    }
+}
+
+function closeBookModal() {
+    bookModal.classList.add("hidden");
+    bookModal.classList.remove("flex");
+
+    previouslyFocusedElement?.focus();
+}
+
+bookResults.addEventListener("click", (event) => {
+    const detailsButton = event.target.closest("[data-book-key]");
+
+    if (detailsButton) {
+        showBookDetails(detailsButton.dataset.bookKey);
+    }
+});
+
+closeModalButton.addEventListener("click", closeBookModal);
+
+bookModal.addEventListener("click", (event) => {
+    if (event.target === bookModal) {
+        closeBookModal();
+    }
+});
+
+document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape" && !bookModal.classList.contains("hidden")) {
+        closeBookModal();
+    }
+});
+
 async function loadBooks() {
     state.status = "loading";
     state.error = null;
