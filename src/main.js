@@ -135,7 +135,7 @@ const subjectSelect = document.querySelector("#book-subject");
 const state = {
     books: [],
     searchQuery: "",
-    
+    selectedSubject: "all",
     status: "loading",
     error: null
 };
