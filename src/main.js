@@ -74,7 +74,19 @@ document.querySelector("#app").innerHTML = `
             </h2>
           </div>
 
-          <p class="text-sm text-[#66756a]">Your reading journey begins here.</p>
+         <div class="flex items-center gap-3">
+  <label for="book-sort" class="text-sm text-[#66756a]">
+    Sort by:
+  </label>
+
+  <select
+    id="book-sort"
+    class="rounded-lg border border-[#d9ded3] bg-white px-3 py-2 text-sm focus:outline-2 focus:outline-[#719477]"
+  >
+    <option value="title">Title (A–Z)</option>
+    <option value="year">Newest first</option>
+  </select>
+</div>
         </div>
 
         <div
@@ -99,6 +111,7 @@ document.querySelector("#app").innerHTML = `
 const bookResults = document.querySelector("#book-results");
 const searchInput = document.querySelector("#book-search");
 const searchForm = document.querySelector("#search-form");
+const sortSelect = document.querySelector("#book-sort");
 
 const state = {
     books: [],
