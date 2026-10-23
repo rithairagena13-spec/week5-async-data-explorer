@@ -1,4 +1,7 @@
 
+import { fetchData } from "./api.js";
+import { renderBooks } from "./render.js";
+
 import './style.css';
 
 document.querySelector('#app').innerHTML = `
@@ -88,3 +91,37 @@ document.querySelector('#app').innerHTML = `
     </footer>
   </div>
 `;
+
+const bookResults = document.querySelector("#book-results");
+
+async function loadBooks() {
+    bookResults.innerHTML = `
+        <p class="col-span-full py-12 text-center text-stone-600">
+            Loading your next favorite books...
+        </p>
+    `;
+
+    try {
+        const books = await fetchData();
+        renderBooks(books);
+    } catch (error) {
+        bookResults.innerHTML = `
+            <div class="col-span-full py-12 text-center">
+                <p class="mb-4 text-red-700">
+                    We couldn't load the books. Please try again.
+                </p>
+                <button
+                    id="retry-button"
+                    class="rounded-lg bg-green-800 px-4 py-2 text-white"
+                >
+                    Retry
+                </button>
+            </div>
+        `;
+
+        document.querySelector("#retry-button")
+            .addEventListener("click", loadBooks);
+    }
+}
+
+loadBooks();
