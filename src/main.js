@@ -120,6 +120,37 @@ document.querySelector("#app").innerHTML = `
     <footer class="border-t border-[#e4e6dc] px-5 py-7 text-center text-sm text-[#66756a]">
       Made for curious minds and lifelong readers.
     </footer>
+
+    
+<div
+  id="book-modal"
+  class="fixed inset-0 z-50 hidden items-center justify-center bg-[#253b30]/60 p-4"
+  role="dialog"
+  aria-modal="true"
+  aria-labelledby="modal-title"
+>
+  <div class="max-h-[85vh] w-full max-w-xl overflow-y-auto rounded-2xl bg-[#f8f7f2] p-6 shadow-xl sm:p-8">
+    <div class="mb-6 flex items-start justify-between gap-4">
+      <h2 id="modal-title" class="text-2xl font-semibold">
+        Book details
+      </h2>
+
+      <button
+        id="close-modal"
+        type="button"
+        aria-label="Close book details"
+        class="rounded-lg px-3 py-2 text-xl hover:bg-[#e4e6dc] focus:outline-2 focus:outline-[#719477]"
+      >
+        &times;
+      </button>
+    </div>
+
+    <div id="modal-content" aria-live="polite">
+      <p class="text-[#66756a]">Choose a book to explore its details.</p>
+    </div>
+  </div>
+</div>
+
   </div>
 `;
 
