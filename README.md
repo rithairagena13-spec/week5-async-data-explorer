@@ -1,87 +1,142 @@
-
 # PageBloom — Book Discovery Explorer
 
-**Discover your next favorite book.**
+A responsive book discovery application that helps users explore books, search by title or author, filter by subject, sort results, and view additional book details.
 
-PageBloom is a responsive book discovery application that allows users to explore books, search by title, author, or subject, filter by subject, sort results, and view additional book details. It retrieves book data from the Open Library Search API using asynchronous JavaScript.
+## Project Information
 
-## Student Information
-
-- **Name:** Ritha IRAGENA
-- **Project:** Week 5 — Async Data Explorer
-- **Application:** PageBloom — Book Discovery Explorer
-- **API:** Open Library Search API
-
-## Project Links
-
+- **Student:** Ritha IRAGENA
+- **Project Name:** PageBloom — Book Discovery Explorer
 - **GitHub Repository:** https://github.com/rithairagena13-spec/week5-async-data-explorer
-- **Live Application:** [Add your deployed application URL]
+- **Live Demo:** [Add your deployed application URL]
 - **Demo Video:** [Add your 3–5 minute demo video URL]
+- **API Used:** Open Library Search API
+
+## About the Project
+
+PageBloom is a frontend web application built to practise asynchronous JavaScript and working with external API data. It retrieves book information from Open Library and displays the results in a responsive interface.
+
+The application demonstrates how to fetch data using `async/await`, handle multiple requests with `Promise.all()`, manage application state, render dynamic content, and provide loading, error, and empty states.
 
 ## Features
 
-- Fetches book data from the Open Library Search API.
-- Uses `fetch()` to make HTTP requests.
-- Uses `async/await` to handle asynchronous operations.
-- Uses `Promise.all()` to request multiple pages concurrently.
-- Provides loading, error, retry, and empty-result states.
-- Displays responsive book cards.
-- Supports live, case-insensitive searching by title, author, and subject.
-- Filters books by subject.
-- Sorts books alphabetically by title or by publication year.
-- Opens a details modal with additional book information.
-- Displays statistics using `Array.prototype.reduce()`.
-- Removes duplicate books using a `Map`.
-- Uses a centralized state object to manage application data.
-- Separates filtering and sorting logic from DOM rendering.
-- Escapes dynamic text before inserting it into HTML.
-- Supports closing the details modal using the close button, backdrop, or Escape key.
+- **Asynchronous data fetching:** Loads book information from the Open Library API when the application starts.
+- **Reusable API helper:** Uses `getJSON(url)` to fetch JSON data and handle unsuccessful HTTP responses.
+- **Loading state:** Provides feedback while data is loading.
+- **Error handling:** Displays an error message when a request fails and provides a Retry button.
+- **Book cards:** Displays book titles, authors, publication years, and available cover images.
+- **Live search:** Searches book titles, authors, and subjects without refetching data for every search.
+- **Subject filtering:** Filters books by available subjects.
+- **Sorting:** Supports alphabetical sorting and publication-year sorting.
+- **Book details modal:** Displays additional information about a selected book.
+- **Empty state:** Shows a helpful message when no books match the current search or filter.
+- **Computed statistics:** Uses `reduce()` to calculate book collection statistics.
+- **Duplicate prevention:** Uses a `Map` to remove duplicate books by their unique keys.
+- **Responsive design:** Adapts the interface to different screen sizes.
+- **Accessible interactions:** Includes labelled controls, keyboard support for the details modal, and an `aria-live` region for result updates.
+- **Safe rendering:** Uses an HTML-escaping helper for API text inserted into HTML.
 
 ## Technologies Used
 
 - HTML5
 - Tailwind CSS v4
-- JavaScript ES Modules
+- JavaScript (ES modules)
 - Vite
+- Fetch API
 - Open Library Search API
-- JavaScript Fetch API
 - Git and GitHub
 
 ## API Documentation
 
-PageBloom uses the Open Library Search API.
+**API provider:** Open Library
 
 Documentation: https://openlibrary.org/dev/docs/api/search
 
+The Search API returns information about books, including titles, authors, publication years, subjects, edition counts, and cover identifiers when available.
+
 Example endpoint:
 
-`https://openlibrary.org/search.json?q=programming&limit=6`
+```text
+https://openlibrary.org/search.json?q=programming&limit=6
+```
 
-The application requests book information such as:
+The application requests selected fields to reduce unnecessary data and improve the usefulness of the returned results.
 
-- `key` — unique identifier for a book
+Fields used include:
+
+- `key` — unique work identifier
 - `title` — book title
-- `author_name` — author names
-- `first_publish_year` — first publication year
-- `cover_i` — cover identifier
-- `subject` — book subjects
-- `edition_count` — number of editions
+- `author_name` — author names, when available
+- `first_publish_year` — first publication year, when available
+- `cover_i` — cover image identifier, when available
+- `subject` — subjects associated with the book
+- `edition_count` — number of editions, when available
 
-The application requests two pages of search results concurrently. It combines the returned book arrays and uses a `Map` to remove duplicate records based on each book's `key`.
+### Example API Response
 
-## How Asynchronous Data Fetching Works
+The following is an illustrative example of the relevant data structure, not a captured response from a specific API request.
 
-The reusable `getJSON(url)` function sends a request using `fetch()`. It checks the HTTP response status and converts the response into JSON.
+```json
+{
+  "docs": [
+    {
+      "key": "/works/OL12345W",
+      "title": "Introduction to Programming",
+      "author_name": ["Example Author"],
+      "first_publish_year": 2020,
+      "cover_i": 123456,
+      "subject": ["Programming", "Computers"],
+      "edition_count": 3
+    }
+  ]
+}
+```
 
-The `fetchData(query)` function creates two API URLs and uses `Promise.all()` to request both pages concurrently. After both requests complete, it combines the results, removes duplicate books, and returns an array of books.
+Some books may not contain every field. The application should handle missing information gracefully.
 
-The `loadBooks()` function uses `await` to wait for the data. While the request is running, the interface displays a loading message. If the request succeeds, the application updates its state, statistics, subject options, and book cards. If a request fails, the application displays an error message and provides a retry option.
+## Asynchronous Data Fetching
 
-Because `Promise.all()` rejects if either request fails, the application handles that failure through its error-handling logic.
+The API logic is organized in `src/api.js`.
+
+### Reusable `getJSON(url)` function
+
+The helper uses `fetch()` to request data from a URL. It checks `response.ok` and throws an error containing the HTTP status when the response is unsuccessful. If the request succeeds, it returns the parsed JSON data.
+
+This keeps the request and response-handling logic reusable.
+
+### Using `async/await`
+
+The `fetchData()` function retrieves book data asynchronously. It accepts a search query, constructs the API URLs, and requests two result pages.
+
+### Using `Promise.all()`
+
+`Promise.all()` runs both requests concurrently and waits for both to complete successfully. Their book results are combined, and a `Map` removes duplicate entries using each book's unique `key`.
+
+If either request fails, the error is passed to the application's error-handling flow.
+
+## Project Structure
+
+```text
+week5-async-data-explorer/
+├── index.html
+├── package.json
+├── vite.config.js
+├── .gitignore
+├── README.md
+├── screenshots/
+│   ├── loading.png
+│   ├── success.png
+│   ├── empty.png
+│   └── error.png
+└── src/
+    ├── api.js
+    ├── main.js
+    ├── render.js
+    └── style.css
+```
 
 ## Application State
 
-The application uses a centralized state object:
+The application uses one central state object in `src/main.js` to keep track of the data and current interface status.
 
 ```javascript
 const state = {
@@ -93,153 +148,165 @@ const state = {
 };
 ```
 
-The state stores:
+- `books` stores the fetched book records.
+- `searchQuery` stores the current search text.
+- `selectedSubject` stores the selected subject filter.
+- `status` represents the current loading or result status.
+- `error` stores error information when a request fails.
 
-- `books`: the books fetched from the API.
-- `searchQuery`: the current search text.
-- `selectedSubject`: the currently selected subject filter.
-- `status`: the current loading or success status, or an error status.
-- `error`: information about a loading failure.
+### State-to-Render Flow
 
-## State-to-Render Flow
+1. The application starts and requests book data.
+2. The loading state is displayed while requests are in progress.
+3. Successful responses update the state with the retrieved books.
+4. Search, filter, and sort controls update the relevant state or display selection.
+5. The rendering functions display the current results.
+6. If a request fails, the error interface offers the user an opportunity to retry.
 
-1. The application starts and calls `loadBooks()`.
-2. The loading state is displayed.
-3. `fetchData()` retrieves book data from the API.
-4. The returned books are stored in `state.books`.
-5. Statistics and available subject options are updated.
-6. `getVisibleItems(state, sortBy)` filters and sorts the existing collection.
-7. `renderBooks()` displays the visible book cards.
-8. Search, subject, and sort events update the relevant state values and trigger rendering again.
-9. Opening a book's details retrieves additional information for the selected book.
-10. If data fetching fails, an error message and retry option are displayed.
+This approach separates application data and state from the functions responsible for displaying the interface.
 
-Searching, filtering, and sorting operate on the books already loaded into the application. They do not require another collection request.
+## Search, Filtering, and Sorting
 
-## Filtering and Sorting
+### Search
 
-The `getVisibleItems(state, sortBy)` function separates data processing from DOM rendering.
+The search feature compares the user's query against available book titles, authors, and subjects without making a new API request for each change.
 
-It filters the collection according to the search query and selected subject. It then sorts the filtered results by title or publication year.
+Search matching is case-insensitive.
 
-The function uses `filter()` and `toSorted()` to return a new array without mutating the original `state.books` array.
+### Filtering
 
-## Statistics
+The subject filter is populated from unique subjects available in the fetched book records. Selecting a subject displays matching books.
 
-PageBloom displays two statistics:
+### Sorting
 
-1. **Books loaded:** the number of books in the current collection.
-2. **Books with known authors:** the number of books with author information.
+The application supports two sorting options:
 
-Both statistics use the `reduce()` array method.
+- **Title A–Z:** Sorts book titles alphabetically.
+- **Publication year:** Sorts books by publication year, with newer years first where available.
 
-## Sample API Response and Data Transformation
+The `toSorted()` method is used to create sorted arrays without mutating the original array.
 
-A simplified example of the API response is shown below:
+### Pure Filtering and Sorting Helper
 
-```json
-{
-  "docs": [
-    {
-      "key": "/works/OL12345W",
-      "title": "Example Book",
-      "author_name": ["Example Author"],
-      "first_publish_year": 2020,
-      "subject": ["Programming", "Computers"],
-      "edition_count": 3
-    }
-  ]
-}
-```
+The `getVisibleItems(state, sortBy)` helper determines which books should be displayed based on the current search query, subject filter, and sorting selection.
 
-This is an illustrative example, not a captured response from a specific request.
+Keeping this logic separate from DOM rendering makes it easier to understand, test, and maintain.
 
-The API response contains a `docs` array. PageBloom extracts the book records from that array, combines results from the two requests, removes duplicates using each book's `key`, and returns the final collection for rendering.
+## Computed Statistics
+
+PageBloom uses `reduce()` to calculate two collection statistics:
+
+1. **Total books:** Counts the number of loaded book records.
+2. **Books with known authors:** Counts the records that contain author information.
+
+These values are calculated from the fetched data rather than being hard-coded.
+
+## Book Details Modal
+
+When a user selects the details button on a book card, the application requests additional information for that book using its Open Library work key.
+
+The modal displays available information, such as a description and subjects. It also supports closing through its close button, the Escape key, or clicking the backdrop.
+
+Missing details are handled gracefully because the API does not guarantee that every book contains every field.
 
 ## Screenshots
 
-Add your actual application screenshots to the `screenshots/` directory.
+The screenshots below demonstrate the application's main interface states.
 
 ### 1. Loading State
 
 ![PageBloom loading state](screenshots/loading.png)
 
-### 2. Success State
+Shows the interface while book data is being requested.
 
-![PageBloom book collection](screenshots/success.png)
+### 2. Successful Results
+
+![PageBloom successful results](screenshots/success.png)
+
+Shows the book collection after the API request succeeds.
 
 ### 3. Empty State
 
 ![PageBloom empty search results](screenshots/empty.png)
 
+Shows the message displayed when the current search or filter returns no matching books.
+
 ### 4. Error State
 
-![PageBloom error and retry message](screenshots/error.png)
+![PageBloom error state](screenshots/error.png)
 
-## Asynchronous JavaScript Reflection
+Shows the error message and Retry button when a request fails.
 
-Building PageBloom helped me understand how asynchronous JavaScript allows an application to retrieve external data without blocking the entire user interface. I learned how to use `fetch()` to make HTTP requests and `async/await` to work with promises. I also learned how to check HTTP responses and handle errors when requests fail. Using `Promise.all()` helped me understand how multiple independent requests can run concurrently. I practiced transforming API responses, combining arrays, and removing duplicate records using a `Map`. I also learned how to manage application state and update the interface when users search, filter, or sort data. This project improved my understanding of separating data-processing logic from rendering and providing useful feedback during loading, empty, and error states.
-
-## Installation and Local Setup
+## How to Run the Project Locally
 
 ### Prerequisites
 
-- Node.js installed on your computer.
-- npm installed with Node.js.
-- Git installed on your computer.
+Install Node.js and npm before running the project.
 
-### 1. Clone the repository
+### Installation
 
-```bash
-git clone https://github.com/rithairagena13-spec/week5-async-data-explorer.git
-```
+1. Clone the repository:
 
-### 2. Enter the project directory
+   ```bash
+   git clone https://github.com/rithairagena13-spec/week5-async-data-explorer.git
+   ```
 
-```bash
-cd week5-async-data-explorer
-```
+2. Navigate into the project folder:
 
-### 3. Install dependencies
+   ```bash
+   cd week5-async-data-explorer
+   ```
 
-```bash
-npm install
-```
+3. Install the dependencies:
 
-### 4. Start the development server
+   ```bash
+   npm install
+   ```
 
-```bash
-npm run dev
-```
+4. Start the Vite development server:
 
-Open the local URL displayed in your terminal.
+   ```bash
+   npm run dev
+   ```
 
-### 5. Build for production
+5. Open the local URL shown in the terminal.
+
+### Production Build
+
+To check that the project builds successfully, run:
 
 ```bash
 npm run build
 ```
 
-Vite generates the production build in the `dist/` directory.
-
 ## Error Handling and Limitations
 
-- The application depends on the availability of the Open Library API and an internet connection.
-- API requests may fail because of network problems or server errors.
-- `Promise.all()` rejects if either of the two requests fails.
-- The number of unique books returned may be fewer than 12 if the API returns duplicate records or incomplete results.
-- Some books may not have author names, publication years, descriptions, covers, or subjects.
-- Book descriptions and available metadata depend on the records provided by Open Library.
+The application checks HTTP responses and displays a user-friendly error state when book data cannot be loaded. The Retry button allows the user to attempt the request again.
 
-## Future Improvements
+Open Library data is community-maintained, so some records may have missing authors, publication years, cover images, descriptions, or subjects. The interface must account for these missing values rather than assuming every field exists.
 
-- Add pagination or a load-more button.
-- Add a favourites feature with local storage.
-- Add a debounce to reduce processing during rapid typing.
-- Improve book-detail loading and error feedback.
-- Add more search and discovery options.
+The application also depends on an internet connection to retrieve book data.
+
+## Demo Video
+
+**Video link:** [Add your 3–5 minute demo video URL]
+
+The demonstration should show:
+
+1. The loading state and successful book results.
+2. Searching, filtering, and sorting.
+3. Opening and closing a book's details modal.
+4. The empty state.
+5. An error and the Retry button.
+6. The `getJSON()` helper, central state, and `Promise.all()` implementation.
+7. API requests in the browser's Network panel.
+
+## Reflection
+
+Working on PageBloom helped me practise asynchronous JavaScript and understand how frontend applications communicate with external APIs. I learned how to use `async/await` and `Promise.all()` to manage multiple requests. I also practised organizing API logic into reusable functions and maintaining application state. Implementing search, filtering, and sorting helped me understand how to transform data before displaying it. Handling loading, error, and empty states showed me why clear feedback is important in a user interface. I also learned to account for missing API fields and escape external text before inserting it into HTML. Overall, this project strengthened my understanding of modular JavaScript and dynamic frontend development.
 
 ## Acknowledgements
 
-- Open Library for providing public book-search data.
-- The course facilitator for the Week 5 Async Data Explorer assignment.
+- [Open Library](https://openlibrary.org/) for providing book data.
+- [Open Library Search API Documentation](https://openlibrary.org/dev/docs/api/search) for API reference material.
+- Vite and Tailwind CSS documentation for development guidance.
