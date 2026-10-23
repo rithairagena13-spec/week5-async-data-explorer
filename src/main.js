@@ -76,39 +76,41 @@ document.querySelector("#app").innerHTML = `
             </h2>
           </div>
 
-          <div class="flex items-center gap-3">
-            <label for="book-sort" class="text-sm text-[#66756a]">
-              Sort by:
-            </label>
+          <div class="flex flex-wrap items-center gap-4">
+            <div class="flex items-center gap-3">
+              <label for="book-sort" class="text-sm text-[#66756a]">
+                Sort by:
+              </label>
 
-            <select
-              id="book-sort"
-              class="rounded-lg border border-[#d9ded3] bg-white px-3 py-2 text-sm focus:outline-2 focus:outline-[#719477]" >
-              <option value="title">Title (A–Z)</option>
-              <option value="year">Newest first</option>
-            </select>
+              <select
+                id="book-sort"
+                class="rounded-lg border border-[#d9ded3] bg-white px-3 py-2 text-sm focus:outline-2 focus:outline-[#719477]"
+              >
+                <option value="title">Title (A–Z)</option>
+                <option value="year">Newest first</option>
+              </select>
+            </div>
+
+            <div class="flex items-center gap-3">
+              <label for="book-subject" class="text-sm text-[#66756a]">
+                Subject:
+              </label>
+
+              <select
+                id="book-subject"
+                class="max-w-48 rounded-lg border border-[#d9ded3] bg-white px-3 py-2 text-sm focus:outline-2 focus:outline-[#719477]"
+              >
+                <option value="all">All subjects</option>
+              </select>
+            </div>
           </div>
         </div>
-
-        
-<div class="flex items-center gap-3">
-  <label for="book-subject" class="text-sm text-[#66756a]">
-    Subject:
-  </label>
-
-  <select
-    id="book-subject"
-    class="max-w-48 rounded-lg border border-[#d9ded3] bg-white px-3 py-2 text-sm focus:outline-2 focus:outline-[#719477]"
-  >
-    <option value="all">All subjects</option>
-  </select>
-</div>
-
 
         <div
           id="book-results"
           aria-live="polite"
-          class="w-full rounded-2xl border border-dashed border-[#cbd5c7] bg-white/60 p-4 sm:p-6" >
+          class="w-full rounded-2xl border border-dashed border-[#cbd5c7] bg-white/60 p-4 sm:p-6"
+        >
           <p class="text-lg font-medium">
             Your next favorite book is waiting.
           </p>
@@ -140,6 +142,23 @@ const state = {
     error: null
 };
 
+function populateSubjects() {
+    const subjects = [
+        ...new Set(
+            state.books.flatMap(({ subject }) => subject || [])
+        )
+    ].toSorted((a, b) => a.localeCompare(b));
+
+    subjectSelect.innerHTML = `
+        <option value="all">All subjects</option>
+        ${subjects.map(subject => `
+            <option value="${escapeHTML(subject)}">
+                ${escapeHTML(subject)}
+            </option>
+        `).join("")}
+    `;
+}
+
 function getVisibleBooks() {
     const query = state.searchQuery.toLowerCase().trim();
 
@@ -151,7 +170,13 @@ function getVisibleBooks() {
                 ...(subject || [])
             ].join(" ").toLowerCase();
 
-            return searchableText.includes(query);
+            const matchesSearch = searchableText.includes(query);
+
+            const matchesSubject =
+                state.selectedSubject === "all" ||
+                (subject || []).includes(state.selectedSubject);
+
+            return matchesSearch && matchesSubject;
         }
     );
 
@@ -187,6 +212,9 @@ async function loadBooks() {
 
     try {
         state.books = await fetchData();
+
+        populateSubjects();
+
         state.status = "success";
         updateResults();
     } catch (error) {
@@ -205,7 +233,8 @@ async function loadBooks() {
                 <button
                     id="retry-button"
                     type="button"
-                    class="rounded-lg bg-green-800 px-4 py-2 text-white hover:bg-green-900 focus:outline-none focus:ring-2 focus:ring-green-700 focus:ring-offset-2">
+                    class="rounded-lg bg-green-800 px-4 py-2 text-white hover:bg-green-900 focus:outline-none focus:ring-2 focus:ring-green-700 focus:ring-offset-2"
+                >
                     Retry
                 </button>
             </div>
@@ -238,5 +267,23 @@ sortSelect.addEventListener("change", () => {
         updateResults();
     }
 });
+
+subjectSelect.addEventListener("change", (event) => {
+    state.selectedSubject = event.target.value;
+
+    if (state.status === "success") {
+        updateResults();
+    }
+});
+
+function escapeHTML(value) {
+    return String(value).replace(/[&<>"']/g, character => ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#39;"
+    })[character]);
+}
 
 loadBooks();
