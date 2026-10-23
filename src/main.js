@@ -1,10 +1,9 @@
 
 import { fetchData } from "./api.js";
 import { renderBooks } from "./render.js";
+import "./style.css";
 
-import './style.css';
-
-document.querySelector('#app').innerHTML = `
+document.querySelector("#app").innerHTML = `
   <div class="min-h-screen bg-[#f8f7f2] text-[#253b30]">
     <header class="border-b border-[#e4e6dc] bg-[#f8f7f2]">
       <nav class="mx-auto flex max-w-7xl items-center justify-between px-5 py-5 md:px-8">
@@ -18,7 +17,8 @@ document.querySelector('#app').innerHTML = `
 
         <a
           href="#discover"
-          class="rounded-full bg-[#304d3b] px-5 py-2.5 text-sm font-medium text-white transition hover:bg-[#45684f] focus:outline-2 focus:outline-offset-2 focus:outline-[#304d3b]" >
+          class="rounded-full bg-[#304d3b] px-5 py-2.5 text-sm font-medium text-white transition hover:bg-[#45684f] focus:outline-2 focus:outline-offset-2 focus:outline-[#304d3b]"
+        >
           Explore books
         </a>
       </nav>
@@ -51,11 +51,14 @@ document.querySelector('#app').innerHTML = `
               name="search"
               type="search"
               placeholder="Try fantasy, history, or programming..."
-              class="min-w-0 flex-1 rounded-xl border border-[#d9ded3] bg-white px-5 py-4 text-sm outline-none transition placeholder:text-[#9aa398] focus:border-[#719477] focus:ring-2 focus:ring-[#719477]/20">
+              aria-label="Search loaded books by title, author, or subject"
+              class="min-w-0 flex-1 rounded-xl border border-[#d9ded3] bg-white px-5 py-4 text-sm outline-none transition placeholder:text-[#9aa398] focus:border-[#719477] focus:ring-2 focus:ring-[#719477]/20"
+            >
 
             <button
               type="submit"
-              class="rounded-xl bg-[#304d3b] px-7 py-4 text-sm font-semibold text-white transition hover:bg-[#45684f] focus:outline-2 focus:outline-offset-2 focus:outline-[#304d3b]">
+              class="rounded-xl bg-[#304d3b] px-7 py-4 text-sm font-semibold text-white transition hover:bg-[#45684f] focus:outline-2 focus:outline-offset-2 focus:outline-[#304d3b]"
+            >
               Discover books
             </button>
           </form>
@@ -77,7 +80,8 @@ document.querySelector('#app').innerHTML = `
         <div
           id="book-results"
           aria-live="polite"
-          class="rounded-2xl border border-dashed border-[#cbd5c7] bg-white/60 px-6 py-12 text-center">
+          class="w-full rounded-2xl border border-dashed border-[#cbd5c7] bg-white/60 p-4 sm:p-6"
+        >
           <p class="text-lg font-medium">Your next favorite book is waiting.</p>
           <p class="mt-2 text-sm text-[#66756a]">
             Search for a topic to start exploring.
@@ -93,26 +97,67 @@ document.querySelector('#app').innerHTML = `
 `;
 
 const bookResults = document.querySelector("#book-results");
+const searchInput = document.querySelector("#book-search");
+const searchForm = document.querySelector("#search-form");
+
+const state = {
+    books: [],
+    searchQuery: "",
+    status: "loading",
+    error: null
+};
+
+function getVisibleBooks() {
+    const query = state.searchQuery.toLowerCase().trim();
+
+    return state.books.filter(({ title, author_name, subject }) => {
+        const searchableText = [
+            title || "",
+            ...(author_name || []),
+            ...(subject || [])
+        ].join(" ").toLowerCase();
+
+        return searchableText.includes(query);
+    });
+}
+
+function updateResults() {
+    renderBooks(getVisibleBooks());
+}
 
 async function loadBooks() {
+    state.status = "loading";
+    state.error = null;
+
+    bookResults.className =
+        "w-full rounded-2xl border border-dashed border-[#cbd5c7] bg-white/60 p-4 sm:p-6";
+
     bookResults.innerHTML = `
-        <p class="col-span-full py-12 text-center text-stone-600">
+        <p class="py-12 text-center text-stone-600" role="status">
             Loading your next favorite books...
         </p>
     `;
 
     try {
-        const books = await fetchData();
-        renderBooks(books);
+        state.books = await fetchData();
+        state.status = "success";
+        updateResults();
     } catch (error) {
+        state.status = "error";
+        state.error = error;
+
+        bookResults.className =
+            "w-full rounded-2xl border border-dashed border-[#cbd5c7] bg-white/60 p-6";
+
         bookResults.innerHTML = `
-            <div class="col-span-full py-12 text-center">
-                <p class="mb-4 text-red-700">
+            <div class="py-12 text-center">
+                <p class="mb-4 text-red-700" role="alert">
                     We couldn't load the books. Please try again.
                 </p>
                 <button
                     id="retry-button"
-                    class="rounded-lg bg-green-800 px-4 py-2 text-white"
+                    type="button"
+                    class="rounded-lg bg-green-800 px-4 py-2 text-white hover:bg-green-900 focus:outline-none focus:ring-2 focus:ring-green-700 focus:ring-offset-2"
                 >
                     Retry
                 </button>
@@ -123,5 +168,19 @@ async function loadBooks() {
             .addEventListener("click", loadBooks);
     }
 }
+
+searchInput.addEventListener("input", (event) => {
+    state.searchQuery = event.target.value;
+
+    if (state.status === "success") {
+        updateResults();
+    }
+});
+
+searchForm.addEventListener("submit", (event) => {
+    event.preventDefault();
+    state.searchQuery = searchInput.value;
+    updateResults();
+});
 
 loadBooks();
