@@ -4,162 +4,112 @@ import { renderBooks } from "./render.js";
 import "./style.css";
 
 document.querySelector("#app").innerHTML = `
-  <div class="min-h-screen bg-[#f8f7f2] text-[#253b30]">
-    <header class="border-b border-[#e4e6dc] bg-[#f8f7f2]">
-      <nav class="mx-auto flex max-w-7xl items-center justify-between px-5 py-5 md:px-8">
-        <a href="#" class="text-2xl font-bold tracking-tight">
-          Page<span class="text-[#719477]">Bloom</span>
+  <div class="min-h-screen bg-[#f8faf0] text-gray-800">
+    <header class="border-b border-green-100 bg-white">
+      <div class="mx-auto flex max-w-7xl items-center justify-between px-5 py-5">
+        <a href="#" class="text-2xl font-bold tracking-tight text-green-800">
+          PageBloom<span class="text-green-500">.</span>
         </a>
-        <p class="hidden text-sm text-[#66756a] sm:block">
-          A little inspiration for your next read
+        <p class="hidden text-sm text-gray-500 sm:block">
+          Discover your next favorite book.
         </p>
-        <a href="#discover" class="rounded-full bg-[#304d3b] px-5 py-2.5 text-sm font-medium text-white transition hover:bg-[#45684f] focus:outline-2 focus:outline-offset-2 focus:outline-[#304d3b]">
-          Explore books
-        </a>
-      </nav>
+      </div>
     </header>
 
-    <main>
-      <section class="mx-auto max-w-7xl px-5 py-16 md:px-8 md:py-24">
-        <p class="mb-5 text-sm font-semibold uppercase tracking-[0.2em] text-[#719477]">
+    <main class="mx-auto max-w-7xl px-5 py-10">
+      <section class="mb-10">
+        <p class="mb-3 font-semibold uppercase tracking-widest text-green-700">
           Your next chapter starts here
         </p>
-        <h1 class="max-w-3xl text-4xl font-semibold leading-tight tracking-tight sm:text-5xl md:text-7xl">
-          Find a book that
-          <span class="font-serif italic text-[#719477]">feels like you.</span>
+        <h1 class="mb-4 max-w-3xl text-4xl font-bold leading-tight text-green-950 sm:text-5xl">
+          Books worth discovering.
         </h1>
-        <p class="mt-6 max-w-xl text-base leading-7 text-[#66756a] md:text-lg">
-          Explore stories, discover new authors, and find your next favorite
-          book with PageBloom.
+        <p class="mb-7 max-w-2xl leading-7 text-gray-600">
+          Explore books, discover new subjects, and find your next great read.
         </p>
-        <div id="discover" class="mt-10 max-w-2xl">
-          <label for="book-search" class="mb-3 block text-sm font-medium">
-            What would you love to read?
-          </label>
-          <form id="search-form" class="flex flex-col gap-3 sm:flex-row">
-            <input
-              id="book-search"
-              name="search"
-              type="search"
-              placeholder="Try fantasy, history, or programming..."
-              aria-label="Search loaded books by title, author, or subject"
-              class="min-w-0 flex-1 rounded-xl border border-[#d9ded3] bg-white px-5 py-4 text-sm outline-none transition placeholder:text-[#9aa398] focus:border-[#719477] focus:ring-2 focus:ring-[#719477]/20"
-            >
-            <button
-              type="submit"
-              class="rounded-xl bg-[#304d3b] px-7 py-4 text-sm font-semibold text-white transition hover:bg-[#45684f] focus:outline-2 focus:outline-offset-2 focus:outline-[#304d3b]"
-            >
-              Discover books
-            </button>
-          </form>
-        </div>
+
+        <form id="search-form" class="flex max-w-2xl flex-col gap-3 sm:flex-row">
+          <label for="book-search" class="sr-only">Search books</label>
+          <input
+            id="book-search"
+            type="search"
+            placeholder="Search by title, author, or subject..."
+            class="min-w-0 flex-1 rounded-xl border border-green-200 bg-white px-4 py-3 outline-none focus:border-green-600 focus:ring-2 focus:ring-green-100"
+          />
+          <button
+            type="submit"
+            class="rounded-xl bg-green-800 px-6 py-3 font-semibold text-white transition hover:bg-green-900 focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2"
+          >
+            Search books
+          </button>
+        </form>
       </section>
 
-      <section class="mx-auto max-w-7xl px-5 pb-16 md:px-8">
-        <div class="mb-8 flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
+      <section aria-label="Book statistics" class="mb-8 grid grid-cols-1 gap-4 sm:grid-cols-2">
+        <article class="rounded-2xl border border-green-100 bg-white p-5">
+          <p class="text-sm text-gray-500">Books loaded</p>
+          <p id="total-books-stat" class="mt-2 text-3xl font-bold text-green-800">—</p>
+        </article>
+        <article class="rounded-2xl border border-green-100 bg-white p-5">
+          <p class="text-sm text-gray-500">Books with known authors</p>
+          <p id="known-authors-stat" class="mt-2 text-3xl font-bold text-green-800">—</p>
+        </article>
+      </section>
+
+      <section>
+        <div class="mb-6 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
           <div>
-            <p class="text-sm font-medium text-[#719477]">
-              A world of possibilities
-            </p>
-            <h2 class="mt-2 text-2xl font-semibold tracking-tight md:text-3xl">
-              Books worth discovering
-            </h2>
+            <h2 class="text-2xl font-bold text-green-950">Explore the collection</h2>
+            <p class="mt-1 text-sm text-gray-500">Search, filter, and sort the books.</p>
           </div>
 
-          <div class="flex flex-wrap items-center gap-3 rounded-2xl border border-[#e4e6dc] bg-white/70 p-4 shadow-sm">
-            <div class="flex items-center gap-3">
-              <label for="book-sort" class="text-sm text-[#66756a]">
-                Sort by:
-              </label>
-              <select
-                id="book-sort"
-                class="rounded-lg border border-[#d9ded3] bg-white px-3 py-2 text-sm focus:outline-2 focus:outline-[#719477]"
-              >
-                <option value="title">Title (A–Z)</option>
-                <option value="year">Newest first</option>
-              </select>
-            </div>
-
-            <div class="flex items-center gap-3">
-              <label for="book-subject" class="text-sm text-[#66756a]">
-                Subject:
-              </label>
-              <select
-                id="book-subject"
-                class="max-w-48 rounded-lg border border-[#d9ded3] bg-white px-3 py-2 text-sm focus:outline-2 focus:outline-[#719477]"
-              >
+          <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
+            <div>
+              <label for="book-subject" class="mb-1 block text-sm font-medium">Subject</label>
+              <select id="book-subject" class="w-full rounded-lg border border-green-200 bg-white px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-200">
                 <option value="all">All subjects</option>
               </select>
             </div>
+
+            <div>
+              <label for="book-sort" class="mb-1 block text-sm font-medium">Sort by</label>
+              <select id="book-sort" class="w-full rounded-lg border border-green-200 bg-white px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-200">
+                <option value="year">Latest publication year</option>
+                <option value="title">Title A–Z</option>
+              </select>
+            </div>
           </div>
         </div>
 
-        <section aria-label="Book statistics" class="mb-6 grid grid-cols-1 gap-4 sm:grid-cols-2">
-          <article class="rounded-2xl border border-[#e4e6dc] bg-white p-5 shadow-sm">
-            <p class="text-sm font-medium text-[#66756a]">Books loaded</p>
-            <p id="total-books-stat" class="mt-2 text-3xl font-semibold text-[#304d3b]" aria-live="polite">—</p>
-            <p class="mt-1 text-sm text-[#66756a]">
-              Books available to explore
-            </p>
-          </article>
-
-          <article class="rounded-2xl border border-[#e4e6dc] bg-white p-5 shadow-sm">
-            <p class="text-sm font-medium text-[#66756a]">
-              Books with known authors
-            </p>
-            <p id="known-authors-stat" class="mt-2 text-3xl font-semibold text-[#304d3b]" aria-live="polite">—</p>
-            <p class="mt-1 text-sm text-[#66756a]">
-              Books listing at least one author
-            </p>
-          </article>
-        </section>
-
-        <div
-          id="book-results"
-          aria-live="polite"
-          class="w-full rounded-2xl border border-dashed border-[#cbd5c7] bg-white/60 p-4 sm:p-6"
-        >
-          <p class="text-lg font-medium">
-            Your next favorite book is waiting.
-          </p>
-          <p class="mt-2 text-sm text-[#66756a]">
-            Search for a topic to start exploring.
-          </p>
-        </div>
+        <div id="book-results" aria-live="polite" aria-busy="true"></div>
       </section>
     </main>
 
-    <footer class="border-t border-[#e4e6dc] px-5 py-7 text-center text-sm text-[#66756a]">
-      Made for curious minds and lifelong readers.
-    </footer>
-
-    <div
-      id="book-modal"
-      class="fixed inset-0 z-50 hidden items-center justify-center bg-[#253b30]/60 p-4"
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby="modal-title"
-    >
-      <div class="max-h-[85vh] w-full max-w-xl overflow-y-auto rounded-2xl bg-[#f8f7f2] p-6 shadow-xl sm:p-8">
-        <div class="mb-6 flex items-start justify-between gap-4">
-          <h2 id="modal-title" class="text-2xl font-semibold">
-            Book details
-          </h2>
-          <button
-            id="close-modal"
-            type="button"
-            aria-label="Close book details"
-            class="rounded-lg px-3 py-2 text-xl hover:bg-[#e4e6dc] focus:outline-2 focus:outline-[#719477]"
-          >
-            &times;
-          </button>
-        </div>
-        <div id="modal-content" aria-live="polite">
-          <p class="text-[#66756a]">
-            Choose a book to explore its details.
-          </p>
-        </div>
+    <footer class="mt-12 border-t border-green-100 bg-white">
+      <div class="mx-auto max-w-7xl px-5 py-6 text-sm text-gray-500">
+        PageBloom · Discover your next favorite book.
       </div>
+    </footer>
+  </div>
+
+  <div
+    id="book-modal"
+    class="fixed inset-0 z-50 hidden items-center justify-center bg-black/50 p-4"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="modal-title"
+  >
+    <div class="max-h-[85vh] w-full max-w-2xl overflow-y-auto rounded-2xl bg-white p-6 shadow-2xl">
+      <div class="mb-5 flex items-center justify-between gap-4">
+        <h2 id="modal-title" class="text-xl font-bold text-green-950">Book details</h2>
+        <button
+          id="close-book-modal"
+          type="button"
+          aria-label="Close book details"
+          class="rounded-lg px-3 py-2 text-xl hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-green-600"
+        >×</button>
+      </div>
+      <div id="modal-content"></div>
     </div>
   </div>
 `;
@@ -171,11 +121,9 @@ const sortSelect = document.querySelector("#book-sort");
 const subjectSelect = document.querySelector("#book-subject");
 const bookModal = document.querySelector("#book-modal");
 const modalContent = document.querySelector("#modal-content");
-const closeModalButton = document.querySelector("#close-modal");
+const closeModalButton = document.querySelector("#close-book-modal");
 const totalBooksStat = document.querySelector("#total-books-stat");
 const knownAuthorsStat = document.querySelector("#known-authors-stat");
-
-let previouslyFocusedElement = null;
 
 const state = {
     books: [],
@@ -185,17 +133,24 @@ const state = {
     error: null
 };
 
+function escapeHTML(value) {
+    return String(value ?? "").replace(/[&<>"']/g, character => ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#39;"
+    })[character]);
+}
+
 function calculateBookStatistics(books) {
-    const totalBooks = books.reduce((total) => total + 1, 0);
+    const totalBooks = books.reduce(total => total + 1, 0);
 
     const booksWithKnownAuthors = books.reduce((total, book) => {
         return total + (book.author_name?.length ? 1 : 0);
     }, 0);
 
-    return {
-        totalBooks,
-        booksWithKnownAuthors
-    };
+    return { totalBooks, booksWithKnownAuthors };
 }
 
 function updateBookStatistics() {
@@ -216,14 +171,12 @@ function populateSubjects() {
     subjectSelect.innerHTML = `
         <option value="all">All subjects</option>
         ${subjects.map(subject => `
-            <option value="${escapeHTML(subject)}">
-                ${escapeHTML(subject)}
-            </option>
+            <option value="${escapeHTML(subject)}">${escapeHTML(subject)}</option>
         `).join("")}
     `;
 }
 
-function getVisibleBooks() {
+function getVisibleItems(state, sortBy) {
     const query = state.searchQuery.toLowerCase().trim();
 
     const filteredBooks = state.books.filter(
@@ -244,7 +197,7 @@ function getVisibleBooks() {
         }
     );
 
-    if (sortSelect.value === "title") {
+    if (sortBy === "title") {
         return filteredBooks.toSorted((a, b) =>
             (a.title || "").localeCompare(b.title || "")
         );
@@ -258,93 +211,119 @@ function getVisibleBooks() {
 }
 
 function updateResults() {
-    renderBooks(getVisibleBooks());
+    renderBooks(getVisibleItems(state, sortSelect.value));
+    bookResults.setAttribute("aria-busy", "false");
 }
 
-async function showBookDetails(bookKey) {
-    const book = state.books.find(({ key }) => key === bookKey);
+function showMessage(message, type = "info") {
+    const styles = {
+        info: "border-green-100 bg-white text-gray-600",
+        error: "border-red-200 bg-red-50 text-red-700"
+    };
 
-    if (!book) return;
-
-    previouslyFocusedElement = document.activeElement;
-
-    bookModal.classList.remove("hidden");
-    bookModal.classList.add("flex");
-
-    modalContent.innerHTML = `
-        <p class="text-[#66756a]" role="status">
-            Loading book details...
-        </p>
+    bookResults.innerHTML = `
+        <div class="rounded-xl border p-6 text-center ${styles[type] || styles.info}">
+            ${escapeHTML(message)}
+        </div>
     `;
+    bookResults.setAttribute("aria-busy", "false");
+}
 
-    closeModalButton.focus();
-
-    try {
-        const details = await getJSON(
-            `https://openlibrary.org${encodeURI(bookKey)}.json`
-        );
-
-        const description =
-            typeof details.description === "string"
-                ? details.description
-                : details.description?.value;
-
-        const title = details.title || book.title || "Untitled";
-        const authors = book.author_name?.join(", ") || "Unknown author";
-        const subjects = (details.subjects || []).slice(0, 8);
-
-        modalContent.innerHTML = `
-            <h3 class="mb-3 text-xl font-semibold text-[#304d3b]">
-                ${escapeHTML(title)}
-            </h3>
-
-            <p class="mb-2 text-sm text-[#66756a]">
-                <strong>Author:</strong> ${escapeHTML(authors)}
-            </p>
-
-            <p class="mb-5 text-sm text-[#66756a]">
-                <strong>First published:</strong>
-                ${book.first_publish_year || "Year unavailable"}
-            </p>
-
-            <div class="mb-5">
-                <h4 class="mb-2 font-semibold">About this book</h4>
-                <p class="text-sm leading-7 text-[#66756a]">
-                    ${escapeHTML(description || "No description is available for this book.")}
-                </p>
-            </div>
-
-            <div>
-                <h4 class="mb-2 font-semibold">Subjects</h4>
-                ${
-                    subjects.length
-                        ? `<div class="flex flex-wrap gap-2">
-                            ${subjects.map(subject => `
-                                <span class="rounded-full bg-[#e4eadd] px-3 py-1 text-xs text-[#304d3b]">
-                                    ${escapeHTML(subject)}
-                                </span>
-                            `).join("")}
-                           </div>`
-                        : `<p class="text-sm text-[#66756a]">No subjects available.</p>`
-                }
-            </div>
-        `;
-    } catch (error) {
-        modalContent.innerHTML = `
-            <p class="mb-4 text-red-700" role="alert">
-                We couldn't load the details for this book.
-            </p>
-
+function showRetryButton(message) {
+    bookResults.innerHTML = `
+        <div class="rounded-xl border border-red-200 bg-red-50 p-6 text-center">
+            <p class="mb-4 text-red-700">${escapeHTML(message)}</p>
             <button
-                id="retry-details"
+                id="retry-loading"
                 type="button"
-                class="rounded-lg bg-[#304d3b] px-4 py-2 text-white hover:bg-[#45684f] focus:outline-2 focus:outline-offset-2 focus:outline-[#304d3b]"
+                class="rounded-lg bg-green-800 px-5 py-2 font-semibold text-white hover:bg-green-900 focus:outline-none focus:ring-2 focus:ring-green-600"
             >
                 Try again
             </button>
+        </div>
+    `;
+    bookResults.setAttribute("aria-busy", "false");
+}
+
+let previousFocusedElement = null;
+
+async function showBookDetails(bookKey) {
+    const book = state.books.find(item => item.key === bookKey);
+
+    if (!book) return;
+
+    previousFocusedElement = document.activeElement;
+    bookModal.classList.remove("hidden");
+    bookModal.classList.add("flex");
+    modalContent.innerHTML = `
+        <p class="py-8 text-center text-gray-500" role="status">
+            Loading book details...
+        </p>
+    `;
+    closeModalButton.focus();
+
+    try {
+        const detail = await getJSON(
+            `https://openlibrary.org${encodeURI(bookKey)}.json`
+        );
+
+        const description = typeof detail.description === "string"
+            ? detail.description
+            : detail.description?.value || "No description is available.";
+
+        const authors = book.author_name?.join(", ") || "Unknown author";
+        const subjects = (detail.subjects || book.subject || []).slice(0, 10);
+
+        modalContent.innerHTML = `
+            <div class="space-y-4">
+                <p class="text-lg font-semibold text-green-900">
+                    ${escapeHTML(detail.title || book.title || "Untitled")}
+                </p>
+                <p class="text-sm text-gray-600">
+                    <span class="font-semibold">Author:</span>
+                    ${escapeHTML(authors)}
+                </p>
+                <p class="text-sm text-gray-600">
+                    <span class="font-semibold">First published:</span>
+                    ${escapeHTML(book.first_publish_year || "Unknown")}
+                </p>
+                <div>
+                    <h3 class="mb-2 font-semibold text-green-900">Description</h3>
+                    <p class="whitespace-pre-line leading-7 text-gray-600">
+                        ${escapeHTML(description)}
+                    </p>
+                </div>
+                <div>
+                    <h3 class="mb-2 font-semibold text-green-900">Subjects</h3>
+                    ${
+                        subjects.length
+                            ? `<div class="flex flex-wrap gap-2">
+                                ${subjects.map(subject => `
+                                    <span class="rounded-full bg-green-50 px-3 py-1 text-xs text-green-800">
+                                        ${escapeHTML(subject)}
+                                    </span>
+                                `).join("")}
+                               </div>`
+                            : `<p class="text-sm text-gray-500">No subjects available.</p>`
+                    }
+                </div>
+            </div>
+        `;
+    } catch {
+        modalContent.innerHTML = `
+            <div class="space-y-4">
+                <p class="text-red-700">We couldn't load the full book details.</p>
+                <button
+                    id="retry-book-details"
+                    type="button"
+                    class="rounded-lg bg-green-800 px-4 py-2 font-semibold text-white hover:bg-green-900"
+                >
+                    Try again
+                </button>
+            </div>
         `;
 
-        document.querySelector("#retry-details")
+        document.querySelector("#retry-book-details")
             .addEventListener("click", () => showBookDetails(bookKey));
     }
 }
@@ -353,92 +332,48 @@ function closeBookModal() {
     bookModal.classList.add("hidden");
     bookModal.classList.remove("flex");
 
-    previouslyFocusedElement?.focus();
+    if (previousFocusedElement instanceof HTMLElement) {
+        previousFocusedElement.focus();
+    }
 }
-
-bookResults.addEventListener("click", (event) => {
-    const detailsButton = event.target.closest("[data-book-key]");
-
-    if (detailsButton) {
-        showBookDetails(detailsButton.dataset.bookKey);
-    }
-});
-
-closeModalButton.addEventListener("click", closeBookModal);
-
-bookModal.addEventListener("click", (event) => {
-    if (event.target === bookModal) {
-        closeBookModal();
-    }
-});
-
-document.addEventListener("keydown", (event) => {
-    if (event.key === "Escape" && !bookModal.classList.contains("hidden")) {
-        closeBookModal();
-    }
-});
 
 async function loadBooks() {
     state.status = "loading";
     state.error = null;
-
-    bookResults.className =
-        "w-full rounded-2xl border border-dashed border-[#cbd5c7] bg-white/60 p-4 sm:p-6";
-
-    bookResults.innerHTML = `
-        <p class="py-12 text-center text-stone-600" role="status">
-            Loading your next favorite books...
-        </p>
-    `;
+    bookResults.setAttribute("aria-busy", "true");
+    showMessage("Loading books...");
 
     try {
         state.books = await fetchData();
+        state.status = "success";
 
         populateSubjects();
         updateBookStatistics();
-
-        state.status = "success";
         updateResults();
+
+        if (state.books.length === 0) {
+            showMessage("No books are available right now.");
+        }
     } catch (error) {
         state.status = "error";
-        state.error = error;
+        state.error = error.message || "Something went wrong.";
 
         totalBooksStat.textContent = "—";
         knownAuthorsStat.textContent = "—";
 
-        bookResults.className =
-            "w-full rounded-2xl border border-dashed border-[#cbd5c7] bg-white/60 p-6";
-
-        bookResults.innerHTML = `
-            <div class="py-12 text-center">
-                <p class="mb-4 text-red-700" role="alert">
-                    We couldn't load the books. Please try again.
-                </p>
-
-                <button
-                    id="retry-button"
-                    type="button"
-                    class="rounded-lg bg-green-800 px-4 py-2 text-white hover:bg-green-900 focus:outline-none focus:ring-2 focus:ring-green-700 focus:ring-offset-2"
-                >
-                    Retry
-                </button>
-            </div>
-        `;
-
-        document.querySelector("#retry-button")
-            .addEventListener("click", loadBooks);
+        showRetryButton("We couldn't load the books. Check your connection and try again.");
     }
 }
 
-searchInput.addEventListener("input", (event) => {
-    state.searchQuery = event.target.value;
+searchInput.addEventListener("input", () => {
+    state.searchQuery = searchInput.value;
 
     if (state.status === "success") {
         updateResults();
     }
 });
 
-searchForm.addEventListener("submit", (event) => {
+searchForm.addEventListener("submit", event => {
     event.preventDefault();
     state.searchQuery = searchInput.value;
 
@@ -453,22 +388,39 @@ sortSelect.addEventListener("change", () => {
     }
 });
 
-subjectSelect.addEventListener("change", (event) => {
-    state.selectedSubject = event.target.value;
+subjectSelect.addEventListener("change", () => {
+    state.selectedSubject = subjectSelect.value;
 
     if (state.status === "success") {
         updateResults();
     }
 });
 
-function escapeHTML(value) {
-    return String(value).replace(/[&<>"']/g, character => ({
-        "&": "&amp;",
-        "<": "&lt;",
-        ">": "&gt;",
-        '"': "&quot;",
-        "'": "&#39;"
-    })[character]);
-}
+bookResults.addEventListener("click", event => {
+    const detailsButton = event.target.closest("[data-book-key]");
+
+    if (detailsButton) {
+        showBookDetails(detailsButton.dataset.bookKey);
+        return;
+    }
+
+    if (event.target.closest("#retry-loading")) {
+        loadBooks();
+    }
+});
+
+closeModalButton.addEventListener("click", closeBookModal);
+
+bookModal.addEventListener("click", event => {
+    if (event.target === bookModal) {
+        closeBookModal();
+    }
+});
+
+document.addEventListener("keydown", event => {
+    if (event.key === "Escape" && !bookModal.classList.contains("hidden")) {
+        closeBookModal();
+    }
+});
 
 loadBooks();
