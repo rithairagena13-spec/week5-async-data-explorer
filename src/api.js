@@ -1,37 +1,35 @@
 
 export async function getJSON(url) {
-    try {
-        const response = await fetch(url);
+    const response = await fetch(url);
 
-        if (!response.ok) {
-            throw new Error("Error fetching book data");
-        }
-
-        return await response.json();
-    } catch (error) {
-        throw error;
+    if (!response.ok) {
+        throw new Error(`Request failed with status ${response.status}`);
     }
+
+    return await response.json();
 }
 
 export async function fetchData(query = "programming") {
     const fields =
         "key,title,author_name,first_publish_year,cover_i,subject,edition_count";
 
-    const fictionURL =
-        `https://openlibrary.org/search.json?q=subject:fiction&limit=6&fields=${fields}`;
+    const encodedQuery = encodeURIComponent(query);
 
-    const programmingURL =
-        `https://openlibrary.org/search.json?q=${encodeURIComponent(query)}&limit=6&fields=${fields}`;
+    const firstURL =
+        `https://openlibrary.org/search.json?q=${encodedQuery}&limit=6&fields=${fields}`;
+
+    const secondURL =
+        `https://openlibrary.org/search.json?q=${encodedQuery}&limit=6&fields=${fields}&page=2`;
 
     try {
-        const [fictionData, programmingData] = await Promise.all([
-            getJSON(fictionURL),
-            getJSON(programmingURL)
+        const [firstData, secondData] = await Promise.all([
+            getJSON(firstURL),
+            getJSON(secondURL)
         ]);
 
         const uniqueBooks = new Map();
 
-        [...fictionData.docs, ...programmingData.docs].forEach(book => {
+        [...firstData.docs, ...secondData.docs].forEach(book => {
             if (book.key && !uniqueBooks.has(book.key)) {
                 uniqueBooks.set(book.key, book);
             }
@@ -39,6 +37,6 @@ export async function fetchData(query = "programming") {
 
         return [...uniqueBooks.values()];
     } catch (error) {
-        throw error;
+        throw new Error(`Unable to load books: ${error.message}`);
     }
 }
