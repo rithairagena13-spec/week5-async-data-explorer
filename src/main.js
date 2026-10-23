@@ -83,19 +83,32 @@ document.querySelector("#app").innerHTML = `
 
             <select
               id="book-sort"
-              class="rounded-lg border border-[#d9ded3] bg-white px-3 py-2 text-sm focus:outline-2 focus:outline-[#719477]"
-            >
+              class="rounded-lg border border-[#d9ded3] bg-white px-3 py-2 text-sm focus:outline-2 focus:outline-[#719477]" >
               <option value="title">Title (A–Z)</option>
               <option value="year">Newest first</option>
             </select>
           </div>
         </div>
 
+        
+<div class="flex items-center gap-3">
+  <label for="book-subject" class="text-sm text-[#66756a]">
+    Subject:
+  </label>
+
+  <select
+    id="book-subject"
+    class="max-w-48 rounded-lg border border-[#d9ded3] bg-white px-3 py-2 text-sm focus:outline-2 focus:outline-[#719477]"
+  >
+    <option value="all">All subjects</option>
+  </select>
+</div>
+
+
         <div
           id="book-results"
           aria-live="polite"
-          class="w-full rounded-2xl border border-dashed border-[#cbd5c7] bg-white/60 p-4 sm:p-6"
-        >
+          class="w-full rounded-2xl border border-dashed border-[#cbd5c7] bg-white/60 p-4 sm:p-6" >
           <p class="text-lg font-medium">
             Your next favorite book is waiting.
           </p>
@@ -190,8 +203,7 @@ async function loadBooks() {
                 <button
                     id="retry-button"
                     type="button"
-                    class="rounded-lg bg-green-800 px-4 py-2 text-white hover:bg-green-900 focus:outline-none focus:ring-2 focus:ring-green-700 focus:ring-offset-2"
-                >
+                    class="rounded-lg bg-green-800 px-4 py-2 text-white hover:bg-green-900 focus:outline-none focus:ring-2 focus:ring-green-700 focus:ring-offset-2">
                     Retry
                 </button>
             </div>
