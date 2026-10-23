@@ -65,7 +65,7 @@ document.querySelector("#app").innerHTML = `
       </section>
 
       <section class="mx-auto max-w-7xl px-5 pb-16 md:px-8">
-        <div class="mb-6 flex flex-wrap items-end justify-between gap-4">
+        <div class="mb-8 flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
           <div>
             <p class="text-sm font-medium text-[#719477]">
               A world of possibilities
@@ -76,7 +76,7 @@ document.querySelector("#app").innerHTML = `
             </h2>
           </div>
 
-          <div class="flex flex-wrap items-center gap-4">
+          <div class="flex flex-wrap items-center gap-3 rounded-2xl border border-[#e4e6dc] bg-white/70 p-4 shadow-sm">
             <div class="flex items-center gap-3">
               <label for="book-sort" class="text-sm text-[#66756a]">
                 Sort by:
