@@ -130,10 +130,12 @@ const bookResults = document.querySelector("#book-results");
 const searchInput = document.querySelector("#book-search");
 const searchForm = document.querySelector("#search-form");
 const sortSelect = document.querySelector("#book-sort");
+const subjectSelect = document.querySelector("#book-subject");
 
 const state = {
     books: [],
     searchQuery: "",
+    
     status: "loading",
     error: null
 };
