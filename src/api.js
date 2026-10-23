@@ -7,23 +7,37 @@ export async function getJSON(url) {
             throw new Error("Error fetching book data");
         }
 
-        const data = await response.json();
-
-        return data;
-
+        return await response.json();
     } catch (error) {
         throw error;
     }
 }
 
 export async function fetchData(query = "programming") {
-    const url = `https://openlibrary.org/search.json?q=${encodeURIComponent(query)}&limit=12&fields=key,title,author_name,first_publish_year,cover_i,subject,edition_count`;
+    const fields =
+        "key,title,author_name,first_publish_year,cover_i,subject,edition_count";
+
+    const fictionURL =
+        `https://openlibrary.org/search.json?q=subject:fiction&limit=6&fields=${fields}`;
+
+    const programmingURL =
+        `https://openlibrary.org/search.json?q=${encodeURIComponent(query)}&limit=6&fields=${fields}`;
 
     try {
-        const data = await getJSON(url);
+        const [fictionData, programmingData] = await Promise.all([
+            getJSON(fictionURL),
+            getJSON(programmingURL)
+        ]);
 
-        return data.docs;
+        const uniqueBooks = new Map();
 
+        [...fictionData.docs, ...programmingData.docs].forEach(book => {
+            if (book.key && !uniqueBooks.has(book.key)) {
+                uniqueBooks.set(book.key, book);
+            }
+        });
+
+        return [...uniqueBooks.values()];
     } catch (error) {
         throw error;
     }
