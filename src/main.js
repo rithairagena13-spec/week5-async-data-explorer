@@ -1,4 +1,4 @@
-import { fetchData } from "./api.js";
+import { fetchData, getJSON } from "./api.js";
 import { renderBooks } from "./render.js";
 import "./style.css";
 
@@ -51,13 +51,11 @@ document.querySelector("#app").innerHTML = `
               type="search"
               placeholder="Try fantasy, history, or programming..."
               aria-label="Search loaded books by title, author, or subject"
-              class="min-w-0 flex-1 rounded-xl border border-[#d9ded3] bg-white px-5 py-4 text-sm outline-none transition placeholder:text-[#9aa398] focus:border-[#719477] focus:ring-2 focus:ring-[#719477]/20"
-            >
+              class="min-w-0 flex-1 rounded-xl border border-[#d9ded3] bg-white px-5 py-4 text-sm outline-none transition placeholder:text-[#9aa398] focus:border-[#719477] focus:ring-2 focus:ring-[#719477]/20"  >
 
             <button
               type="submit"
-              class="rounded-xl bg-[#304d3b] px-7 py-4 text-sm font-semibold text-white transition hover:bg-[#45684f] focus:outline-2 focus:outline-offset-2 focus:outline-[#304d3b]"
-            >
+              class="rounded-xl bg-[#304d3b] px-7 py-4 text-sm font-semibold text-white transition hover:bg-[#45684f] focus:outline-2 focus:outline-offset-2 focus:outline-[#304d3b]">
               Discover books
             </button>
           </form>
@@ -84,8 +82,7 @@ document.querySelector("#app").innerHTML = `
 
               <select
                 id="book-sort"
-                class="rounded-lg border border-[#d9ded3] bg-white px-3 py-2 text-sm focus:outline-2 focus:outline-[#719477]"
-              >
+                class="rounded-lg border border-[#d9ded3] bg-white px-3 py-2 text-sm focus:outline-2 focus:outline-[#719477]" >
                 <option value="title">Title (A–Z)</option>
                 <option value="year">Newest first</option>
               </select>
@@ -98,8 +95,7 @@ document.querySelector("#app").innerHTML = `
 
               <select
                 id="book-subject"
-                class="max-w-48 rounded-lg border border-[#d9ded3] bg-white px-3 py-2 text-sm focus:outline-2 focus:outline-[#719477]"
-              >
+                class="max-w-48 rounded-lg border border-[#d9ded3] bg-white px-3 py-2 text-sm focus:outline-2 focus:outline-[#719477]"  >
                 <option value="all">All subjects</option>
               </select>
             </div>
@@ -109,8 +105,7 @@ document.querySelector("#app").innerHTML = `
         <div
           id="book-results"
           aria-live="polite"
-          class="w-full rounded-2xl border border-dashed border-[#cbd5c7] bg-white/60 p-4 sm:p-6"
-        >
+          class="w-full rounded-2xl border border-dashed border-[#cbd5c7] bg-white/60 p-4 sm:p-6"  >
           <p class="text-lg font-medium">
             Your next favorite book is waiting.
           </p>
