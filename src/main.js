@@ -1,3 +1,4 @@
+
 import { fetchData, getJSON } from "./api.js";
 import { renderBooks } from "./render.js";
 import "./style.css";
@@ -9,15 +10,10 @@ document.querySelector("#app").innerHTML = `
         <a href="#" class="text-2xl font-bold tracking-tight">
           Page<span class="text-[#719477]">Bloom</span>
         </a>
-
         <p class="hidden text-sm text-[#66756a] sm:block">
           A little inspiration for your next read
         </p>
-
-        <a
-          href="#discover"
-          class="rounded-full bg-[#304d3b] px-5 py-2.5 text-sm font-medium text-white transition hover:bg-[#45684f] focus:outline-2 focus:outline-offset-2 focus:outline-[#304d3b]"
-        >
+        <a href="#discover" class="rounded-full bg-[#304d3b] px-5 py-2.5 text-sm font-medium text-white transition hover:bg-[#45684f] focus:outline-2 focus:outline-offset-2 focus:outline-[#304d3b]">
           Explore books
         </a>
       </nav>
@@ -28,22 +24,18 @@ document.querySelector("#app").innerHTML = `
         <p class="mb-5 text-sm font-semibold uppercase tracking-[0.2em] text-[#719477]">
           Your next chapter starts here
         </p>
-
         <h1 class="max-w-3xl text-4xl font-semibold leading-tight tracking-tight sm:text-5xl md:text-7xl">
           Find a book that
           <span class="font-serif italic text-[#719477]">feels like you.</span>
         </h1>
-
         <p class="mt-6 max-w-xl text-base leading-7 text-[#66756a] md:text-lg">
           Explore stories, discover new authors, and find your next favorite
           book with PageBloom.
         </p>
-
         <div id="discover" class="mt-10 max-w-2xl">
           <label for="book-search" class="mb-3 block text-sm font-medium">
             What would you love to read?
           </label>
-
           <form id="search-form" class="flex flex-col gap-3 sm:flex-row">
             <input
               id="book-search"
@@ -51,11 +43,12 @@ document.querySelector("#app").innerHTML = `
               type="search"
               placeholder="Try fantasy, history, or programming..."
               aria-label="Search loaded books by title, author, or subject"
-              class="min-w-0 flex-1 rounded-xl border border-[#d9ded3] bg-white px-5 py-4 text-sm outline-none transition placeholder:text-[#9aa398] focus:border-[#719477] focus:ring-2 focus:ring-[#719477]/20"  >
-
+              class="min-w-0 flex-1 rounded-xl border border-[#d9ded3] bg-white px-5 py-4 text-sm outline-none transition placeholder:text-[#9aa398] focus:border-[#719477] focus:ring-2 focus:ring-[#719477]/20"
+            >
             <button
               type="submit"
-              class="rounded-xl bg-[#304d3b] px-7 py-4 text-sm font-semibold text-white transition hover:bg-[#45684f] focus:outline-2 focus:outline-offset-2 focus:outline-[#304d3b]">
+              class="rounded-xl bg-[#304d3b] px-7 py-4 text-sm font-semibold text-white transition hover:bg-[#45684f] focus:outline-2 focus:outline-offset-2 focus:outline-[#304d3b]"
+            >
               Discover books
             </button>
           </form>
@@ -68,7 +61,6 @@ document.querySelector("#app").innerHTML = `
             <p class="text-sm font-medium text-[#719477]">
               A world of possibilities
             </p>
-
             <h2 class="mt-2 text-2xl font-semibold tracking-tight md:text-3xl">
               Books worth discovering
             </h2>
@@ -79,10 +71,10 @@ document.querySelector("#app").innerHTML = `
               <label for="book-sort" class="text-sm text-[#66756a]">
                 Sort by:
               </label>
-
               <select
                 id="book-sort"
-                class="rounded-lg border border-[#d9ded3] bg-white px-3 py-2 text-sm focus:outline-2 focus:outline-[#719477]" >
+                class="rounded-lg border border-[#d9ded3] bg-white px-3 py-2 text-sm focus:outline-2 focus:outline-[#719477]"
+              >
                 <option value="title">Title (A–Z)</option>
                 <option value="year">Newest first</option>
               </select>
@@ -92,24 +84,44 @@ document.querySelector("#app").innerHTML = `
               <label for="book-subject" class="text-sm text-[#66756a]">
                 Subject:
               </label>
-
               <select
                 id="book-subject"
-                class="max-w-48 rounded-lg border border-[#d9ded3] bg-white px-3 py-2 text-sm focus:outline-2 focus:outline-[#719477]"  >
+                class="max-w-48 rounded-lg border border-[#d9ded3] bg-white px-3 py-2 text-sm focus:outline-2 focus:outline-[#719477]"
+              >
                 <option value="all">All subjects</option>
               </select>
             </div>
           </div>
         </div>
 
+        <section aria-label="Book statistics" class="mb-6 grid grid-cols-1 gap-4 sm:grid-cols-2">
+          <article class="rounded-2xl border border-[#e4e6dc] bg-white p-5 shadow-sm">
+            <p class="text-sm font-medium text-[#66756a]">Books loaded</p>
+            <p id="total-books-stat" class="mt-2 text-3xl font-semibold text-[#304d3b]" aria-live="polite">—</p>
+            <p class="mt-1 text-sm text-[#66756a]">
+              Books available to explore
+            </p>
+          </article>
+
+          <article class="rounded-2xl border border-[#e4e6dc] bg-white p-5 shadow-sm">
+            <p class="text-sm font-medium text-[#66756a]">
+              Books with known authors
+            </p>
+            <p id="known-authors-stat" class="mt-2 text-3xl font-semibold text-[#304d3b]" aria-live="polite">—</p>
+            <p class="mt-1 text-sm text-[#66756a]">
+              Books listing at least one author
+            </p>
+          </article>
+        </section>
+
         <div
           id="book-results"
           aria-live="polite"
-          class="w-full rounded-2xl border border-dashed border-[#cbd5c7] bg-white/60 p-4 sm:p-6"  >
+          class="w-full rounded-2xl border border-dashed border-[#cbd5c7] bg-white/60 p-4 sm:p-6"
+        >
           <p class="text-lg font-medium">
             Your next favorite book is waiting.
           </p>
-
           <p class="mt-2 text-sm text-[#66756a]">
             Search for a topic to start exploring.
           </p>
@@ -121,36 +133,34 @@ document.querySelector("#app").innerHTML = `
       Made for curious minds and lifelong readers.
     </footer>
 
-    
-<div
-  id="book-modal"
-  class="fixed inset-0 z-50 hidden items-center justify-center bg-[#253b30]/60 p-4"
-  role="dialog"
-  aria-modal="true"
-  aria-labelledby="modal-title"
->
-  <div class="max-h-[85vh] w-full max-w-xl overflow-y-auto rounded-2xl bg-[#f8f7f2] p-6 shadow-xl sm:p-8">
-    <div class="mb-6 flex items-start justify-between gap-4">
-      <h2 id="modal-title" class="text-2xl font-semibold">
-        Book details
-      </h2>
-
-      <button
-        id="close-modal"
-        type="button"
-        aria-label="Close book details"
-        class="rounded-lg px-3 py-2 text-xl hover:bg-[#e4e6dc] focus:outline-2 focus:outline-[#719477]"
-      >
-        &times;
-      </button>
+    <div
+      id="book-modal"
+      class="fixed inset-0 z-50 hidden items-center justify-center bg-[#253b30]/60 p-4"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="modal-title"
+    >
+      <div class="max-h-[85vh] w-full max-w-xl overflow-y-auto rounded-2xl bg-[#f8f7f2] p-6 shadow-xl sm:p-8">
+        <div class="mb-6 flex items-start justify-between gap-4">
+          <h2 id="modal-title" class="text-2xl font-semibold">
+            Book details
+          </h2>
+          <button
+            id="close-modal"
+            type="button"
+            aria-label="Close book details"
+            class="rounded-lg px-3 py-2 text-xl hover:bg-[#e4e6dc] focus:outline-2 focus:outline-[#719477]"
+          >
+            &times;
+          </button>
+        </div>
+        <div id="modal-content" aria-live="polite">
+          <p class="text-[#66756a]">
+            Choose a book to explore its details.
+          </p>
+        </div>
+      </div>
     </div>
-
-    <div id="modal-content" aria-live="polite">
-      <p class="text-[#66756a]">Choose a book to explore its details.</p>
-    </div>
-  </div>
-</div>
-
   </div>
 `;
 
@@ -162,6 +172,8 @@ const subjectSelect = document.querySelector("#book-subject");
 const bookModal = document.querySelector("#book-modal");
 const modalContent = document.querySelector("#modal-content");
 const closeModalButton = document.querySelector("#close-modal");
+const totalBooksStat = document.querySelector("#total-books-stat");
+const knownAuthorsStat = document.querySelector("#known-authors-stat");
 
 let previouslyFocusedElement = null;
 
@@ -172,6 +184,27 @@ const state = {
     status: "loading",
     error: null
 };
+
+function calculateBookStatistics(books) {
+    const totalBooks = books.reduce((total) => total + 1, 0);
+
+    const booksWithKnownAuthors = books.reduce((total, book) => {
+        return total + (book.author_name?.length ? 1 : 0);
+    }, 0);
+
+    return {
+        totalBooks,
+        booksWithKnownAuthors
+    };
+}
+
+function updateBookStatistics() {
+    const { totalBooks, booksWithKnownAuthors } =
+        calculateBookStatistics(state.books);
+
+    totalBooksStat.textContent = totalBooks.toLocaleString();
+    knownAuthorsStat.textContent = booksWithKnownAuthors.toLocaleString();
+}
 
 function populateSubjects() {
     const subjects = [
@@ -227,7 +260,6 @@ function getVisibleBooks() {
 function updateResults() {
     renderBooks(getVisibleBooks());
 }
-
 
 async function showBookDetails(bookKey) {
     const book = state.books.find(({ key }) => key === bookKey);
@@ -363,12 +395,16 @@ async function loadBooks() {
         state.books = await fetchData();
 
         populateSubjects();
+        updateBookStatistics();
 
         state.status = "success";
         updateResults();
     } catch (error) {
         state.status = "error";
         state.error = error;
+
+        totalBooksStat.textContent = "—";
+        knownAuthorsStat.textContent = "—";
 
         bookResults.className =
             "w-full rounded-2xl border border-dashed border-[#cbd5c7] bg-white/60 p-6";
