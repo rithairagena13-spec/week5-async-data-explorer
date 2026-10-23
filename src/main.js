@@ -123,17 +123,31 @@ const state = {
 function getVisibleBooks() {
     const query = state.searchQuery.toLowerCase().trim();
 
-    return state.books.filter(({ title, author_name, subject }) => {
-        const searchableText = [
-            title || "",
-            ...(author_name || []),
-            ...(subject || [])
-        ].join(" ").toLowerCase();
+    const filteredBooks = state.books.filter(
+        ({ title, author_name, subject }) => {
+            const searchableText = [
+                title || "",
+                ...(author_name || []),
+                ...(subject || [])
+            ].join(" ").toLowerCase();
 
-        return searchableText.includes(query);
-    });
+            return searchableText.includes(query);
+        }
+    );
+
+    const sortBy = sortSelect.value;
+
+    if (sortBy === "title") {
+        return filteredBooks.toSorted((a, b) =>
+            (a.title || "").localeCompare(b.title || "")
+        );
+    }
+
+    return filteredBooks.toSorted(
+        (a, b) => (b.first_publish_year || 0) -
+                  (a.first_publish_year || 0)
+    );
 }
-
 function updateResults() {
     renderBooks(getVisibleBooks());
 }
