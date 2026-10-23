@@ -128,6 +128,11 @@ const searchInput = document.querySelector("#book-search");
 const searchForm = document.querySelector("#search-form");
 const sortSelect = document.querySelector("#book-sort");
 const subjectSelect = document.querySelector("#book-subject");
+const bookModal = document.querySelector("#book-modal");
+const modalContent = document.querySelector("#modal-content");
+const closeModalButton = document.querySelector("#close-modal");
+
+let previouslyFocusedElement = null;
 
 const state = {
     books: [],
