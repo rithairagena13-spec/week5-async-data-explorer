@@ -1,4 +1,3 @@
-
 import { fetchData } from "./api.js";
 import { renderBooks } from "./render.js";
 import "./style.css";
@@ -68,25 +67,28 @@ document.querySelector("#app").innerHTML = `
       <section class="mx-auto max-w-7xl px-5 pb-16 md:px-8">
         <div class="mb-6 flex flex-wrap items-end justify-between gap-4">
           <div>
-            <p class="text-sm font-medium text-[#719477]">A world of possibilities</p>
+            <p class="text-sm font-medium text-[#719477]">
+              A world of possibilities
+            </p>
+
             <h2 class="mt-2 text-2xl font-semibold tracking-tight md:text-3xl">
               Books worth discovering
             </h2>
           </div>
 
-         <div class="flex items-center gap-3">
-  <label for="book-sort" class="text-sm text-[#66756a]">
-    Sort by:
-  </label>
+          <div class="flex items-center gap-3">
+            <label for="book-sort" class="text-sm text-[#66756a]">
+              Sort by:
+            </label>
 
-  <select
-    id="book-sort"
-    class="rounded-lg border border-[#d9ded3] bg-white px-3 py-2 text-sm focus:outline-2 focus:outline-[#719477]"
-  >
-    <option value="title">Title (A–Z)</option>
-    <option value="year">Newest first</option>
-  </select>
-</div>
+            <select
+              id="book-sort"
+              class="rounded-lg border border-[#d9ded3] bg-white px-3 py-2 text-sm focus:outline-2 focus:outline-[#719477]"
+            >
+              <option value="title">Title (A–Z)</option>
+              <option value="year">Newest first</option>
+            </select>
+          </div>
         </div>
 
         <div
@@ -94,7 +96,10 @@ document.querySelector("#app").innerHTML = `
           aria-live="polite"
           class="w-full rounded-2xl border border-dashed border-[#cbd5c7] bg-white/60 p-4 sm:p-6"
         >
-          <p class="text-lg font-medium">Your next favorite book is waiting.</p>
+          <p class="text-lg font-medium">
+            Your next favorite book is waiting.
+          </p>
+
           <p class="mt-2 text-sm text-[#66756a]">
             Search for a topic to start exploring.
           </p>
@@ -135,19 +140,19 @@ function getVisibleBooks() {
         }
     );
 
-    const sortBy = sortSelect.value;
-
-    if (sortBy === "title") {
+    if (sortSelect.value === "title") {
         return filteredBooks.toSorted((a, b) =>
             (a.title || "").localeCompare(b.title || "")
         );
     }
 
     return filteredBooks.toSorted(
-        (a, b) => (b.first_publish_year || 0) -
-                  (a.first_publish_year || 0)
+        (a, b) =>
+            (b.first_publish_year || 0) -
+            (a.first_publish_year || 0)
     );
 }
+
 function updateResults() {
     renderBooks(getVisibleBooks());
 }
@@ -181,6 +186,7 @@ async function loadBooks() {
                 <p class="mb-4 text-red-700" role="alert">
                     We couldn't load the books. Please try again.
                 </p>
+
                 <button
                     id="retry-button"
                     type="button"
@@ -207,7 +213,16 @@ searchInput.addEventListener("input", (event) => {
 searchForm.addEventListener("submit", (event) => {
     event.preventDefault();
     state.searchQuery = searchInput.value;
-    updateResults();
+
+    if (state.status === "success") {
+        updateResults();
+    }
+});
+
+sortSelect.addEventListener("change", () => {
+    if (state.status === "success") {
+        updateResults();
+    }
 });
 
 loadBooks();
